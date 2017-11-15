@@ -46,9 +46,10 @@ def message_to_digraphs(message_original):
         message.append(e)
 
     # Delet space
-    for unused in range(len(message)):
-        if " " in message:
-            message.remove(" ")
+    if(len(alphabet) < 27):
+        for unused in range(len(message)):
+         if " " in message:
+          message.remove(" ")
 
     # If both letters are the same, add an "X" after the first letter.
     i = 0
@@ -90,52 +91,41 @@ def encrypt(message):
     for e in message:
         linha1, coluna1 = find_position(key_matrix, e[0])
         linha2, coluna2 = find_position(key_matrix, e[1])
-        print("linha1:" + str(linha1))
-        print("coluna1:" + str(coluna1))
-        print("linha2:" + str(linha2))
-        print("coluna2:" + str(coluna2))
         if linha1 == linha2:
             bora = True
             if coluna1 == (int(rows) - 1):
                 coluna1 = 0
                 cipher.append(key_matrix[linha1][coluna1])
                 cipher.append(key_matrix[linha2][coluna2 + 1])
-                print("1:"+str(cipher))
                 bora = False
             if coluna2 == (int(rows) - 1):
                 coluna2 = 0
                 cipher.append(key_matrix[linha1][coluna1 + 1])
                 cipher.append(key_matrix[linha2][coluna2])
-                print("2:" + str(cipher))
                 bora = False
             elif bora == True:
                 cipher.append(key_matrix[linha1][coluna1 + 1])
                 cipher.append(key_matrix[linha1][coluna2 + 1])
-                print("3:" + str(cipher))
         elif coluna1 == coluna2:
             bora = True
             if linha1 == int(cols) - 1:
                 linha1 = 0
                 cipher.append(key_matrix[linha1][coluna1])
                 cipher.append(key_matrix[linha2 + 1][coluna2])
-                print("4:" + str(cipher))
                 bora = False
             if linha2 == int(cols) - 1:
                 linha2 = 0
                 cipher.append(key_matrix[linha1 + 1][coluna1])
                 cipher.append(key_matrix[linha2][coluna2])
-                print("5:" + str(cipher))
                 bora = False
             elif bora:
                 cipher.append(key_matrix[linha1 + 1][coluna1])
                 cipher.append(key_matrix[linha2 + 1][coluna2])
-                print("6:" + str(cipher))
         elif coluna1 != coluna2 and linha1 != linha2:
             cipher.append(key_matrix[linha1][coluna2])
             cipher.append(key_matrix[linha2][coluna1])
-            print("7:" + str(cipher))
         bora = True
-        print(e)
+
     return cipher
 
 
@@ -157,23 +147,40 @@ def decrypt(cipher):
         linha1, coluna1 = find_position(key_matrix, e[0])
         linha2, coluna2 = find_position(key_matrix, e[1])
         if linha1 == linha2:
-            if coluna1 == int(cols):
-                coluna1 = 0
-            if coluna2 == int(cols):
-                coluna2 = 0
-            plaintext.append(key_matrix[linha1][coluna1 - 1])
-            plaintext.append(key_matrix[linha1][coluna2 - 1])
+            bora = True
+            if coluna1 == 0:
+                coluna1 = (int(rows) - 1)
+                plaintext.append(key_matrix[linha1][coluna1])
+                plaintext.append(key_matrix[linha2][coluna2 - 1])
+                bora = False
+            if coluna2 == 0:
+                coluna2 = int(rows) - 1
+                plaintext.append(key_matrix[linha1][coluna1 - 1])
+                plaintext.append(key_matrix[linha2][coluna2])
+                bora = False
+            elif bora == True:
+                plaintext.append(key_matrix[linha1][coluna1 - 1])
+                plaintext.append(key_matrix[linha1][coluna2 - 1])
+
         elif coluna1 == coluna2:
-            if linha1 == int(rows):
-                linha1 = 0
-            if linha2 == int(rows):
-                linha2 = 0
-            plaintext.append(key_matrix[linha1 - 1][coluna1])
-            plaintext.append(key_matrix[linha2 - 1][coluna2])
-        else:
+            bora = True
+            if linha1 == 0:
+                linha1 = int(cols) - 1
+                plaintext.append(key_matrix[linha1][coluna1])
+                plaintext.append(key_matrix[linha2 - 1][coluna2])
+                bora = False
+            if linha2 == 0:
+                linha2 = int(cols) - 1
+                plaintext.append(key_matrix[linha2 - 1][coluna2])
+                plaintext.append(key_matrix[linha1][coluna1])
+                bora = False
+            elif bora == True:
+                plaintext.append(key_matrix[linha1 - 1][coluna1])
+                plaintext.append(key_matrix[linha2 - 1][coluna2])
+        elif coluna1 != coluna2 and linha1 != linha2:
             plaintext.append(key_matrix[linha1][coluna2])
             plaintext.append(key_matrix[linha2][coluna1])
-
+        bora = True
     for unused in range(len(plaintext)):
         if "X" in plaintext:
             plaintext.remove("X")
